@@ -1,24 +1,31 @@
-import React from 'react';
+import {React,useState, useEffect} from 'react';
 import logo from './logo.svg';
 import './App.css';
 
 function App() {
+  const [quote, getQuote] = useState({content:'', author:''});
+
+  function fetchQuote(){
+    fetch('https://api.quotable.io/random')
+    .then(data => data.json())
+    .then(res => getQuote({content: res.content, author: res.author}));
+  }
+
+  useEffect(() => {
+    fetchQuote();
+  },[])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="App-Quote">
+       <div className = "App-Quote-Content">
+        {`"${quote.content}"`}
+        {`- ${quote.author}`}
+       </div>
+       <button className = "App-Quote-Generate" onClick= {fetchQuote}>
+          Get Another Quote
+       </button>
+      </div>
     </div>
   );
 }
